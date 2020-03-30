@@ -4,14 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>PdfiumPrinter</AssemblyName>
     <RootNamespace>PdfiumPrinter</RootNamespace>
+    <Version>1.1.0</Version>
+    <Description>This package can help you to print pdfs using netstandard. Can be referenced in NetCore, NetFramework, Xamarin Projects.</Description>
+    <Authors>Sandro Hanea</Authors>
+    <Company />
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sandrohanea/PdfiumPrinter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sandrohanea/PdfiumPrinter</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>
