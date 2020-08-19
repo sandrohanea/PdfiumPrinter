@@ -25,13 +25,11 @@ namespace PdfiumPrinter
         {
 
             this.Settings.Copies = copies;
-            using (var printDocument = pdfDocument.CreatePrintDocument())
-            {
-                printDocument.PrinterSettings = Settings;
-                printDocument.DefaultPageSettings = PageSettings;
-                printDocument.PrintController = new StandardPrintController();
-                printDocument.Print();
-            }
+            using var printDocument = pdfDocument.CreatePrintDocument();
+            printDocument.PrinterSettings = Settings;
+            printDocument.DefaultPageSettings = PageSettings;
+            printDocument.PrintController = new StandardPrintController();
+            printDocument.Print();
         }
 
         /// <summary>
@@ -39,19 +37,13 @@ namespace PdfiumPrinter
         /// </summary>
         /// <param name="fileStream">The file stream to be printed.</param>
         /// <param name="copies">The number of copies to be printed, default 1.</param>
-        public void Print(Stream fileStream, short copies = 1)
+        /// <param name="documentName">The name of the document in the print queue, if null, default name "document" will be used.</param>
+        public void Print(Stream fileStream, short copies = 1, string documentName = null)
         {
             this.Settings.Copies = copies;
-            using (var document = PdfDocument.Load(fileStream))
-            {
-                using (var printDocument = document.CreatePrintDocument())
-                {
-                    printDocument.PrinterSettings = Settings;
-                    printDocument.DefaultPageSettings = PageSettings;
-                    printDocument.PrintController = new StandardPrintController();
-                    printDocument.Print();
-                }
-            }
+            using var document = PdfDocument.Load(fileStream);
+            using var printDocument = document.CreatePrintDocument();
+            Print(printDocument, documentName);
         }
 
         /// <summary>
@@ -59,20 +51,26 @@ namespace PdfiumPrinter
         /// </summary>
         /// <param name="fileName">The PDF file path to be printed.</param>
         /// <param name="copies">The number of copies to be printed, default 1.</param>
-        public void Print(string fileName, short copies = 1)
+        /// <param name="documentName">The name of the document in the print queue, if null, default name "document" will be used.</param>
+        public void Print(string fileName, short copies = 1, string documentName = null)
         {
             this.Settings.Copies = copies;
             // Now print the PDF document
-            using (var document = PdfDocument.Load(fileName))
+            using var document = PdfDocument.Load(fileName);
+            using var printDocument = document.CreatePrintDocument();
+            Print(printDocument, documentName);
+        }
+
+        private void Print(PrintDocument printDocument, string documentName)
+        {
+            if (documentName != null)
             {
-                using (var printDocument = document.CreatePrintDocument())
-                {
-                    printDocument.PrinterSettings = Settings;
-                    printDocument.DefaultPageSettings = PageSettings;
-                    printDocument.PrintController = new StandardPrintController();
-                    printDocument.Print();
-                }
+                printDocument.DocumentName = documentName;
             }
+            printDocument.PrinterSettings = Settings;
+            printDocument.DefaultPageSettings = PageSettings;
+            printDocument.PrintController = new StandardPrintController();
+            printDocument.Print();
         }
 
         public PageSettings PageSettings { get; }

@@ -8,9 +8,10 @@ namespace PdfiumPrinter.Demo
 
         static void Main(string[] args)
         {
-            var printer = new PdfPrinter("Microsoft Print to PDF");
+            var printer = new PdfPrinter("PDF-XChange Standard");
             printer.Print(printFile);
-            Console.WriteLine("The file was succesfully printed.");
+            printer.Print(printFile, documentName: "with name");
+            Console.WriteLine("The files were succesfully printed.");
             Console.ReadKey();
         }
     }

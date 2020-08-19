@@ -331,10 +331,8 @@ namespace PdfiumPrinter
             if (path == null)
                 throw new ArgumentNullException("path");
 
-            using (var stream = File.Create(path))
-            {
-                Save(stream);
-            }
+            using var stream = File.Create(path);
+            Save(stream);
         }
 
         /// <summary>

@@ -4,7 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>PdfiumPrinter</AssemblyName>
     <RootNamespace>PdfiumPrinter</RootNamespace>
-    <Version>1.1.0</Version>
+    <LangVersion>8</LangVersion>
+    <Version>1.2.0</Version>
     <Description>This package can help you to print pdfs using netstandard. Can be referenced in NetCore, NetFramework, Xamarin Projects.</Description>
     <Authors>Sandro Hanea</Authors>
     <Company />

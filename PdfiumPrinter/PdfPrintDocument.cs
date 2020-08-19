@@ -17,26 +17,20 @@ namespace PdfiumPrinter
 
         protected virtual void OnBeforeQueryPageSettings(QueryPageSettingsEventArgs e)
         {
-            var ev = BeforeQueryPageSettings;
-            if (ev != null)
-                ev(this, e);
+            BeforeQueryPageSettings?.Invoke(this, e);
         }
 
         public event PrintPageEventHandler BeforePrintPage;
 
         protected virtual void OnBeforePrintPage(PrintPageEventArgs e)
         {
-            var ev = BeforePrintPage;
-            if (ev != null)
-                ev(this, e);
+            BeforePrintPage?.Invoke(this, e);
         }
+
 
         public PdfPrintDocument(IPdfDocument document, PdfPrintSettings settings)
         {
-            if (document == null)
-                throw new ArgumentNullException("document");
-
-            _document = document;
+            _document = document ?? throw new ArgumentNullException("document");
             _settings = settings;
         }
 
