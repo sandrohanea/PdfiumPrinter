@@ -15,7 +15,7 @@ namespace PdfiumPrinter
             {
                 PrinterName = printerName
             };
-            PageSettings = new PageSettings()
+            PageSettings = new PageSettings(Settings)
             {
                 Margins = new Margins(0, 0, 0, 0)
             };
