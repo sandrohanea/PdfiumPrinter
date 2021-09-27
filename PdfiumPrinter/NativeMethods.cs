@@ -31,22 +31,25 @@ namespace PdfiumPrinter
             }
         }
 
-        private static string GetDllPath(string path)
+        private static string GetDllPath(string basePath)
         {
-            if (path != null)
-            {
-                string platform;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    platform = $"win-{(IntPtr.Size == 4 ? "x86" : "x64")}";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    platform = "osx";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    platform = "linux";
-                else
-                    throw new Exception("Unsupported OS platform");
+            if (basePath == null)
+                return null;
 
-                path = Path.Combine(path, "runtimes", platform, "native", "pdfium.dll");
+            string platform;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                string architecture = Enum.GetName(typeof(Architecture), RuntimeInformation.OSArchitecture).ToLower();
+                platform = $"win-{architecture}";
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                platform = "osx";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                platform = "linux";
+            else
+                throw new Exception("Unsupported OS platform");
+
+            string path = Path.Combine(basePath, "runtimes", platform, "native", "pdfium.dll");
 
             return path;
         }
