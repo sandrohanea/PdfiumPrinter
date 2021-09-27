@@ -35,8 +35,17 @@ namespace PdfiumPrinter
         {
             if (path != null)
             {
-                path = Path.Combine(path, IntPtr.Size == 4 ? "x86" : "x64");
-                path = Path.Combine(path, "pdfium.dll");
+                string platform;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    platform = $"win-{(IntPtr.Size == 4 ? "x86" : "x64")}";
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    platform = "osx";
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    platform = "linux";
+                else
+                    throw new Exception("Unsupported OS platform");
+
+                path = Path.Combine(path, "runtimes", platform, "native", "pdfium.dll");
             }
 
             return path;

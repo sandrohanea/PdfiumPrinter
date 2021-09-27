@@ -16,8 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="$(MSBuildThisFileDirectory)\deps\native\x64\pdfium.dll">
-      <Link>x64\pdfium.dll</Link>
+    <None Include="$(MSBuildThisFileDirectory)\runtimes\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="sha1good.pdf">
