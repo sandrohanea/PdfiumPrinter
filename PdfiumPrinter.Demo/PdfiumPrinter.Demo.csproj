@@ -5,15 +5,21 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <!--
   <ItemGroup>
     <PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" Version="2018.4.8.256" />
   </ItemGroup>
-
+  -->
+  
   <ItemGroup>
     <ProjectReference Include="..\PdfiumPrinter\PdfiumPrinter.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="$(MSBuildThisFileDirectory)\deps\native\x64\pdfium.dll">
+      <Link>x64\pdfium.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="sha1good.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
