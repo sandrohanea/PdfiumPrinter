@@ -149,8 +149,8 @@ namespace PdfiumPrinter
 
                 if (pageOrientation != printOrientation)
                 {
-                    Swap(ref height, ref width);
-                    Swap(ref left, ref top);
+                    (height, width) = (width, height);
+                    (left, top) = (top, left);
                 }
 
                 RenderPage(e, _currentPage, left, top, width, height);
@@ -195,13 +195,6 @@ namespace PdfiumPrinter
                 ),
                 PdfRenderFlags.ForPrinting | PdfRenderFlags.Annotations
             );
-        }
-
-        private static void Swap(ref double a, ref double b)
-        {
-            var tmp = a;
-            a = b;
-            b = tmp;
         }
 
         private static int AdjustDpi(double value, double dpi)
