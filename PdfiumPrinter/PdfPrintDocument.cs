@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Text;
 
 namespace PdfiumPrinter
 {
-
     internal class PdfPrintDocument : PrintDocument
     {
         private readonly IPdfDocument _document;
@@ -26,7 +23,6 @@ namespace PdfiumPrinter
         {
             BeforePrintPage?.Invoke(this, e);
         }
-
 
         public PdfPrintDocument(IPdfDocument document, PdfPrintSettings settings)
         {
@@ -95,9 +91,9 @@ namespace PdfiumPrinter
                     {
                         int page = _currentPage * pagesPerPage;
                         if (settings.Orientation == PdfiumPrinter.Orientation.Horizontal)
-                            page += vertical * settings.Vertical + horizontal;
+                            page += (vertical * settings.Vertical) + horizontal;
                         else
-                            page += horizontal * settings.Horizontal + vertical;
+                            page += (horizontal * settings.Horizontal) + vertical;
 
                         if (page >= _document.PageCount)
                             continue;
@@ -136,8 +132,8 @@ namespace PdfiumPrinter
                 {
                     left = 0;
                     top = 0;
-                    width = e.PageBounds.Width - e.PageSettings.HardMarginX * 2;
-                    height = e.PageBounds.Height - e.PageSettings.HardMarginY * 2;
+                    width = e.PageBounds.Width - (e.PageSettings.HardMarginX * 2);
+                    height = e.PageBounds.Height - (e.PageSettings.HardMarginY * 2);
                 }
                 else
                 {
