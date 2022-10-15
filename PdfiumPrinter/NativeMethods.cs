@@ -5,7 +5,6 @@ using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
-using System.Text;
 using Microsoft.Win32.SafeHandles;
 
 namespace PdfiumPrinter
@@ -22,36 +21,50 @@ namespace PdfiumPrinter
 
             // Load the platform dependent Pdfium.dll if it exists.
 
-            string path = GetDllPath(AppDomain.CurrentDomain.RelativeSearchPath);
-            if (!TryLoadNativeLibrary(path))
+            foreach (var (pathOption, isNative) in GetPathOptions())
             {
-                path = GetDllPath(Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location));
-                if (!TryLoadNativeLibrary(path))
-                    throw new Exception($"Could not load native library ({path})");
+                if (TryLoadNativeLibrary(pathOption))
+                {
+                    IsNativePdfium = isNative;
+                    return;
+                }
             }
+
+            throw new Exception($"Could not load native library. Ensure that you installed at least one of the NativeLibrary packages. See https://github.com/sandrohanea/PdfiumPrinter/ for details.");
         }
 
-        private static string GetDllPath(string basePath)
+        public static bool IsNativePdfium { get; private set; }
+
+        private static IEnumerable<(string path, bool nativePdfium)> GetPathOptions()
         {
-            if (basePath == null)
-                return null;
-
-            string platform;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (AppDomain.CurrentDomain.RelativeSearchPath != null)
             {
-                string architecture = Enum.GetName(typeof(Architecture), RuntimeInformation.OSArchitecture).ToLower();
-                platform = $"win-{architecture}";
+                yield return (GetNativePdfiumDllPath(AppDomain.CurrentDomain.RelativeSearchPath), true);
+                yield return (GetPdifumViewerNativePath(AppDomain.CurrentDomain.RelativeSearchPath), false);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                platform = "osx";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                platform = "linux";
-            else
-                throw new Exception("Unsupported OS platform");
 
-            string path = Path.Combine(basePath, "runtimes", platform, "native", "pdfium.dll");
+            var nativeMethodsPath = Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
+            yield return (GetNativePdfiumDllPath(nativeMethodsPath), true);
+            yield return (GetPdifumViewerNativePath(nativeMethodsPath), false);
+        }
 
-            return path;
+        private static string GetPdifumViewerNativePath(string basePath)
+        {
+            return Path.Combine(basePath, IntPtr.Size == 4 ? "x86" : "x64", "pdfium.dll");
+        }
+
+        private static string GetNativePdfiumDllPath(string basePath)
+        {
+            var platform = RuntimeInformation.OSArchitecture switch
+            {
+                Architecture.X86 when RuntimeInformation.IsOSPlatform(OSPlatform.Windows) => "win-x86",
+                Architecture.X64 when RuntimeInformation.IsOSPlatform(OSPlatform.Windows) => "win-x64",
+                _ when RuntimeInformation.IsOSPlatform(OSPlatform.Linux) => "linux",
+                _ when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => "osx",
+                _ => throw new NotSupportedException($"Unsupported OS platform, architecture: {RuntimeInformation.OSArchitecture}")
+            };
+
+            return Path.Combine(basePath, "runtimes", platform, "native", "pdfium.dll");
         }
 
         private static bool TryLoadNativeLibrary(string path)

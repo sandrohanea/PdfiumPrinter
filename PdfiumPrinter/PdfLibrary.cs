@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace PdfiumPrinter
 {
@@ -15,7 +12,9 @@ namespace PdfiumPrinter
             lock (_syncRoot)
             {
                 if (_library == null)
+                {
                     _library = new PdfLibrary();
+                }
             }
         }
 
@@ -23,7 +22,14 @@ namespace PdfiumPrinter
 
         private PdfLibrary()
         {
-            NativeMethods.FPDF_InitLibrary();
+            if (NativeMethods.IsNativePdfium)
+            {
+                NativeMethods.FPDF_InitLibrary();
+            }
+            else
+            {
+                NativeMethods.FPDF_AddRef();
+            }
         }
 
         ~PdfLibrary()
@@ -40,12 +46,21 @@ namespace PdfiumPrinter
 
         private void Dispose(bool disposing)
         {
-            if (!_disposed)
+            if (_disposed)
+            {
+                return;
+            }
+            
+            if (NativeMethods.IsNativePdfium)
             {
                 NativeMethods.FPDF_DestroyLibrary();
-
-                _disposed = true;
             }
+            else
+            {
+                NativeMethods.FPDF_Release();
+            }
+
+            _disposed = true;
         }
     }
 }
