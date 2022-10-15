@@ -23,7 +23,7 @@ namespace PdfiumPrinter
 
         private PdfLibrary()
         {
-            NativeMethods.FPDF_AddRef();
+            NativeMethods.FPDF_InitLibrary();
         }
 
         ~PdfLibrary()
@@ -42,7 +42,7 @@ namespace PdfiumPrinter
         {
             if (!_disposed)
             {
-                NativeMethods.FPDF_Release();
+                NativeMethods.FPDF_DestroyLibrary();
 
                 _disposed = true;
             }

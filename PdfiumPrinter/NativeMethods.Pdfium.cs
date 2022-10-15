@@ -14,6 +14,22 @@ namespace PdfiumPrinter
         // threads, even when there are multiple AppDomain's in play.
         private static readonly string LockString = String.Intern("2b5a4556-fcbb-492d-8a25-a0d191fc48b0");
 
+        public static void FPDF_InitLibrary()
+        {
+            lock (LockString)
+            {
+                Imports.FPDF_InitLibrary();
+            }
+        }
+
+        public static void FPDF_DestroyLibrary()
+        {
+            lock (LockString)
+            {
+                Imports.FPDF_DestroyLibrary();
+            }
+        }
+
         public static void FPDF_AddRef()
         {
             lock (LockString)
@@ -587,6 +603,12 @@ namespace PdfiumPrinter
 
         private static class Imports
         {
+            [DllImport("pdfium.dll")]
+            public static extern void FPDF_InitLibrary();
+
+            [DllImport("pdfium.dll")]
+            public static extern void FPDF_DestroyLibrary();
+
             [DllImport("pdfium.dll")]
             public static extern void FPDF_AddRef();
 

@@ -26,6 +26,8 @@ Additionally, you'll have to install ONE of the following NuGet Packages(based o
 [PdfiumViewer.Native.x86.no_v8-no_xfa](https://www.nuget.org/packages/PdfiumViewer.Native.x86.no_v8-no_xfa/)
 [PdfiumViewer.Native.x86_64.no_v8-no_xfa](https://www.nuget.org/packages/PdfiumViewer.Native.x86_64.no_v8-no_xfa/)
 
+Alternatively, you may opt to install the [PdfiumPrinter.Native](https://www.nuget.org/packages/PdfiumPrinter.Native/) package instead.
+
 # Usage
 	var printerName = "Microsoft Print to PDF"; //You can use your own printer;
 	var printer = new PdfPrinter(printerName);
