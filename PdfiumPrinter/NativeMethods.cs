@@ -22,17 +22,42 @@ namespace PdfiumPrinter
 
             // Load the platform dependent Pdfium.dll if it exists.
 
-            if (!TryLoadNativeLibrary(AppDomain.CurrentDomain.RelativeSearchPath))
-                TryLoadNativeLibrary(Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location));
+            string path = GetDllPath(AppDomain.CurrentDomain.RelativeSearchPath);
+            if (!TryLoadNativeLibrary(path))
+            {
+                path = GetDllPath(Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location));
+                if (!TryLoadNativeLibrary(path))
+                    throw new Exception($"Could not load native library ({path})");
+            }
+        }
+
+        private static string GetDllPath(string basePath)
+        {
+            if (basePath == null)
+                return null;
+
+            string platform;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                string architecture = Enum.GetName(typeof(Architecture), RuntimeInformation.OSArchitecture).ToLower();
+                platform = $"win-{architecture}";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                platform = "osx";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                platform = "linux";
+            else
+                throw new Exception("Unsupported OS platform");
+
+            string path = Path.Combine(basePath, "runtimes", platform, "native", "pdfium.dll");
+
+            return path;
         }
 
         private static bool TryLoadNativeLibrary(string path)
         {
             if (path == null)
                 return false;
-
-            path = Path.Combine(path, IntPtr.Size == 4 ? "x86" : "x64");
-            path = Path.Combine(path, "pdfium.dll");
 
             return File.Exists(path) && LoadLibrary(path) != IntPtr.Zero;
         }
