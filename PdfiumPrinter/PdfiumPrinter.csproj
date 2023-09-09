@@ -6,7 +6,7 @@
     <RootNamespace>PdfiumPrinter</RootNamespace>
     <LangVersion>10</LangVersion>
     <Version>1.4.0</Version>
-    <Description>This package can help you to print pdfs using netstandard. Can be referenced in NetCore, NetFramework, Xamarin Projects.</Description>
+    <Description>This package can help you to print or render pdfs using netstandard and pdfium.</Description>
     <Authors>Sandro Hanea</Authors>
     <Company />
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
