@@ -1,35 +1,30 @@
 ﻿using System;
+using PdfiumPrinter.LibraryLoader;
 
 namespace PdfiumPrinter
 {
-    internal class PdfLibrary : IDisposable
+    public class PdfLibrary : IDisposable
     {
         private static readonly object _syncRoot = new object();
         private static PdfLibrary _library;
 
-        public static void EnsureLoaded()
+        public static void EnsureLoaded(string libraryPath = null, bool bypassLoading = false)
         {
             lock (_syncRoot)
             {
                 if (_library == null)
                 {
-                    _library = new PdfLibrary();
+                    _library = new PdfLibrary(libraryPath, bypassLoading);
                 }
             }
         }
 
         private bool _disposed;
 
-        private PdfLibrary()
+        private PdfLibrary(string libraryPath, bool bypassLoading)
         {
-            if (NativeMethods.IsNativePdfium)
-            {
-                NativeMethods.FPDF_InitLibrary();
-            }
-            else
-            {
-                NativeMethods.FPDF_AddRef();
-            }
+            NativeLibraryLoader.LoadNativeLibrary(libraryPath, bypassLoading);
+            NativeMethods.FPDF_InitLibrary();
         }
 
         ~PdfLibrary()
@@ -51,14 +46,7 @@ namespace PdfiumPrinter
                 return;
             }
             
-            if (NativeMethods.IsNativePdfium)
-            {
-                NativeMethods.FPDF_DestroyLibrary();
-            }
-            else
-            {
-                NativeMethods.FPDF_Release();
-            }
+            NativeMethods.FPDF_DestroyLibrary();
 
             _disposed = true;
         }
