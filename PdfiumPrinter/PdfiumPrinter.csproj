@@ -5,7 +5,7 @@
     <AssemblyName>PdfiumPrinter</AssemblyName>
     <RootNamespace>PdfiumPrinter</RootNamespace>
     <LangVersion>10</LangVersion>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
     <Description>This package can help you to print or render pdfs using netstandard and pdfium.</Description>
     <Authors>Sandro Hanea</Authors>
     <Company />
@@ -14,7 +14,13 @@
     <RepositoryUrl>https://github.com/sandrohanea/PdfiumPrinter</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\readme.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />

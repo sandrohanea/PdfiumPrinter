@@ -67,10 +67,15 @@ public static class NativeLibraryLoader
                 Path.GetDirectoryName(Environment.GetCommandLineArgs()[0])
             }.Where(it => !string.IsNullOrEmpty(it)).FirstOrDefault();
 
-            path = string.IsNullOrEmpty(assemblySearchPath)
-                ? Path.Combine("runtimes", $"{platform}-{architecture}", fileName)
-                : Path.Combine(assemblySearchPath, "runtimes", $"{platform}-{architecture}", "native", fileName);
+            var isNetFramework = RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework");
 
+            path = isNetFramework switch
+            {
+                true when string.IsNullOrEmpty(assemblySearchPath) => Path.Combine(architecture, fileName),
+                true => Path.Combine(assemblySearchPath, architecture, fileName),
+                false when string.IsNullOrEmpty(assemblySearchPath) => Path.Combine("runtimes", $"{platform}-{architecture}", "native", fileName),
+                _ => Path.Combine(assemblySearchPath, "runtimes", $"{platform}-{architecture}", "native", fileName)
+            };
         }
 
         if (defaultLibraryLoader != null)
@@ -81,7 +86,7 @@ public static class NativeLibraryLoader
         if (!File.Exists(path))
         {
             throw new FileNotFoundException($"Native Library not found in path {path}. " +
-                $"Verify you have have included the native Pdfium library in your application, " +
+                $"Verify you have included the native Pdfium library in your application, " +
                 $"or install the default libraries with the bblanchon.PDFium NuGet.");
         }
 

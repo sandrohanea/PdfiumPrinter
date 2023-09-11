@@ -29,7 +29,7 @@ To install PdfiumPrinter, run the following command in the [Package Manager Cons
 
 or simply add a package reference in your csproj:
 ```
-    <PackageReference Include="PdfiumPrinter" Version="1.4.0" />
+    <PackageReference Include="PdfiumPrinter" Version="1.4.1" />
 ```
 
 	
