@@ -14,7 +14,6 @@
     <RepositoryUrl>https://github.com/sandrohanea/PdfiumPrinter</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
